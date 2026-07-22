@@ -359,7 +359,7 @@
     const message = 'Esses códigos foram usados pra criar tudo que você vê, mas sem a aplicação e organização correta, são só letras.';
 
     setTimeout(() => {
-      typeWriter(typedTextInner, message).then(() => {
+      typeWriter(typedTextInner, message, 55).then(() => {
         if (typeCursor) typeCursor.classList.add('is-done');
         organizeBtn.classList.remove('is-hidden');
         if (hasGSAP) {
@@ -397,13 +397,6 @@
       return;
     }
 
-    const spans = Array.from(codeRainEl.querySelectorAll('span'));
-    const sampleCount = Math.min(50, spans.length);
-    const sample = [];
-    for (let i = 0; i < sampleCount; i++) {
-      sample.push(spans[Math.floor(Math.random() * spans.length)]);
-    }
-
     const flash = document.createElement('div');
     flash.className = 'organize-flash';
     organizeLayer.appendChild(flash);
@@ -412,18 +405,21 @@
     const centerY = window.innerHeight / 2;
     const clones = [];
 
-    sample.forEach((span) => {
-      const rect = span.getBoundingClientRect();
-      if (rect.top < -60 || rect.top > window.innerHeight + 60) return; // ignora fora da tela
+    // espalha os fragmentos em posições visíveis da tela (em vez de usar a posição
+    // real das colunas, que na maior parte do tempo estão fora da viewport caindo)
+    const hues = ['', 'is-hue-gold', 'is-hue-purple'];
+    const fragmentCount = window.innerWidth < 640 ? 26 : 42;
+    for (let i = 0; i < fragmentCount; i++) {
       const clone = document.createElement('span');
-      const firstLine = span.textContent.split('\n')[0];
-      clone.textContent = firstLine;
-      clone.className = span.className;
-      clone.style.left = `${rect.left}px`;
-      clone.style.top = `${rect.top}px`;
+      clone.textContent = REAL_CODE_LINES[Math.floor(Math.random() * REAL_CODE_LINES.length)];
+      clone.className = hues[Math.floor(Math.random() * hues.length)];
+      const left = Math.random() * window.innerWidth;
+      const top = Math.random() * window.innerHeight;
+      clone.style.left = `${left}px`;
+      clone.style.top = `${top}px`;
       organizeLayer.appendChild(clone);
       clones.push(clone);
-    });
+    }
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -431,20 +427,26 @@
       },
     });
 
+    tl.fromTo(clones,
+      { opacity: 0, scale: 0.85 },
+      { opacity: 0.95, scale: 1, duration: 0.35, ease: 'power2.out', stagger: { amount: 0.3, from: 'random' } },
+      0
+    );
+
     tl.to(clones, {
       x: (i, el) => centerX - parseFloat(el.style.left),
       y: (i, el) => centerY - parseFloat(el.style.top),
-      scale: 0.25,
+      scale: 0.2,
       opacity: 0,
-      rotation: () => (Math.random() - 0.5) * 40,
-      duration: 1.1,
+      rotation: () => (Math.random() - 0.5) * 50,
+      duration: 1.05,
       ease: 'power3.inOut',
-      stagger: { amount: 0.55, from: 'random' },
-    }, 0.05);
+      stagger: { amount: 0.5, from: 'random' },
+    }, 0.35);
 
-    tl.to(flash, { opacity: 0.85, duration: 0.45, ease: 'power2.in' }, 0.85);
-    tl.call(() => { transitionTo('garden'); }, null, 1.05);
-    tl.to(flash, { opacity: 0, duration: 1.1, ease: 'power2.out', onComplete: () => flash.remove() }, 1.25);
+    tl.to(flash, { opacity: 0.85, duration: 0.45, ease: 'power2.in' }, 1.0);
+    tl.call(() => { transitionTo('garden'); }, null, 1.3);
+    tl.to(flash, { opacity: 0, duration: 1.1, ease: 'power2.out', onComplete: () => flash.remove() }, 1.5);
   }
 
   organizeBtn.addEventListener('click', playOrganizeTransition);
