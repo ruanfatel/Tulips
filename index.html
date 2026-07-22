@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Para Thayla</title>
+
+<!-- ==========================================================
+     FONTES
+     - Display (títulos / mensagem final): Cormorant Garamond
+       -> serifada, clássica, romântica, elegante.
+     - Corpo (textos, inputs, botões): Poppins
+       -> moderna, limpa, geométrica, contraste com a serifada.
+     ========================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- GSAP: usada apenas para orquestrar as transições cinematográficas entre telas.
+     Carregada via CDN (cdnjs) — não requer nenhuma instalação, basta ter internet
+     no momento em que o navegador abre o projeto. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ==========================================================
+     TELA 1 — CAPA / LOGIN
+     Imagem cyberpunk em tela cheia + parallax + card de login
+     ========================================================== -->
+<section id="screen-cover" class="screen screen--active">
+
+  <div class="cover">
+    <!-- camadas de imagem para efeito de parallax/zoom em profundidade -->
+    <div class="cover__layer cover__layer--bg" id="coverBg"></div>
+    <div class="cover__layer cover__layer--vignette"></div>
+    <div class="cover__layer cover__layer--grain"></div>
+    <div class="cover__glow"></div>
+  </div>
+
+  <!-- Card de login (glassmorphism) -->
+  <div class="login-wrap">
+    <form id="loginForm" class="login-card" autocomplete="off">
+      <h1 class="login-title">Um presente<br /><span class="login-title__accent">para você</span></h1>
+
+      <div class="field">
+        <input type="text" id="inputName" class="field__input" placeholder=" " required />
+        <label for="inputName" class="field__label">Digite seu nome</label>
+        <span class="field__line"></span>
+      </div>
+
+      <div class="field">
+        <input type="password" id="inputPass" class="field__input" placeholder=" " required />
+        <label for="inputPass" class="field__label">Digite sua senha</label>
+        <span class="field__line"></span>
+      </div>
+
+      <p id="loginError" class="login-error" aria-live="polite"></p>
+
+      <button type="submit" class="btn btn--primary login-submit">
+        <span>Entrar</span>
+      </button>
+
+      <button type="button" id="forgotBtn" class="forgot-btn">Não sabe sua senha?</button>
+      <p id="forgotMsg" class="forgot-msg">Você é minha?</p>
+    </form>
+  </div>
+
+  <!-- controle de música (fica visível em todas as telas após login) -->
+  <button id="musicToggle" class="music-toggle" aria-label="Pausar ou continuar a música">
+    <span class="music-toggle__bars">
+      <i></i><i></i><i></i>
+    </span>
+  </button>
+
+  <audio id="bgAudio" src="assets/audio/winter_bear.mp3" preload="auto" loop></audio>
+</section>
+
+
+<!-- ==========================================================
+     TELA 2 — CÓDIGO
+     Fundo com "chuva" de código estilo editor + card de vidro
+     ========================================================== -->
+<section id="screen-code" class="screen">
+  <div class="code-rain" id="codeRain" aria-hidden="true"></div>
+  <div class="code-overlay"></div>
+
+  <div class="code-content">
+    <div class="glass-card code-card">
+      <p class="code-card__text" id="typedText"><span id="typedTextInner"></span><span class="type-cursor">|</span></p>
+      <button id="organizeBtn" class="btn btn--primary is-hidden">
+        <span>Organize!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- camada onde os fragmentos de código "voam" e se organizam antes da tela final -->
+  <div class="organize-layer" id="organizeLayer" aria-hidden="true"></div>
+</section>
+
+
+<!-- ==========================================================
+     TELA 3 — BOSQUE DE TULIPAS NO INVERNO
+     Cenário final com parallax, neve, névoa e mensagem
+     ========================================================== -->
+<section id="screen-garden" class="screen">
+  <div class="garden" id="garden">
+    <div class="garden__photo" id="gardenPhoto" data-depth="0.03"></div>
+    <div class="garden__tint"></div>
+    <div class="garden__lightrays"></div>
+    <div class="garden__mist"></div>
+    <div class="garden__sparkles" id="sparkles"></div>
+    <canvas id="snowCanvas" class="garden__snow"></canvas>
+    <div class="garden__vignette"></div>
+  </div>
+
+  <div class="garden-content">
+    <p class="garden-message">
+      Tudo que escrevi foi pra você, pra nunca se esquecer que entre
+      códigos e mais códigos, é
+      <span class="highlight-you">VOCÊ</span>
+      quem deu o sentido a eles, minha princesa.
+    </p>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
